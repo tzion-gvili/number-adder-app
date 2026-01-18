@@ -17,21 +17,42 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Number Adder"
+            android:text="Makolet David"
             android:textSize="24sp"
             android:textStyle="bold"
             android:textColor="#FFFFFF"
             android:gravity="center" />
+    </LinearLayout>
+
+    <!-- Product Selection Section -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:background="#E8F5E9"
+        android:elevation="2dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="8dp">
+        
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Makolet David"
-            android:textSize="14sp"
-            android:textStyle="italic"
-            android:textColor="#FFFFFF"
-            android:alpha="0.9"
-            android:gravity="center"
-            android:layout_marginTop="4dp" />
+            android:text="Select Product:"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="#2E7D32"
+            android:paddingBottom="8dp" />
+        
+        <Spinner
+            android:id="@+id/spinnerProducts"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:padding="12dp"
+            android:minHeight="56dp"
+            android:background="#FFFFFF"
+            android:textSize="16sp"
+            android:prompt="@string/select_product_prompt" />
     </LinearLayout>
 
     <!-- Input Section -->
@@ -42,7 +63,7 @@
         android:padding="16dp"
         android:background="#FFFFFF"
         android:elevation="2dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         android:layout_marginBottom="16dp">
 
         <EditText

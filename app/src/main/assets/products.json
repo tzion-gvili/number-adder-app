@@ -1,0 +1,252 @@
+﻿[
+    {
+        "productprice":  6.5,
+        "barcode":  "010772016147",
+        "productname":  "מגבונים"
+    },
+    {
+        "productprice":  15,
+        "barcode":  "0123003",
+        "productname":  "סיגריות מגנה"
+    },
+    {
+        "productprice":  16,
+        "barcode":  "01230234",
+        "productname":  "קאמל סופט"
+    },
+    {
+        "productprice":  21.5,
+        "barcode":  "0123033",
+        "productname":  "קאמל"
+    },
+    {
+        "productprice":  16,
+        "barcode":  "01230331",
+        "productname":  "קאמל בוקס"
+    },
+    {
+        "productprice":  22,
+        "barcode":  "0123073",
+        "productname":  "קאמל כחול"
+    },
+    {
+        "productprice":  20,
+        "barcode":  "0123123",
+        "productname":  "וינסטון אדום"
+    },
+    {
+        "productprice":  20,
+        "barcode":  "0123193",
+        "productname":  "ונסטון ליט"
+    },
+    {
+        "productprice":  20,
+        "barcode":  "01231932",
+        "productname":  "וינסטון"
+    },
+    {
+        "productprice":  15,
+        "barcode":  "0123250",
+        "productname":  "מגנה כחול"
+    },
+    {
+        "productprice":  6.8,
+        "barcode":  "013495113506",
+        "productname":  "קליק ביסקויט"
+    },
+    {
+        "productprice":  6.9,
+        "barcode":  "013495113513",
+        "productname":  "קליק כדורים"
+    },
+    {
+        "productprice":  6.8,
+        "barcode":  "013495113520",
+        "productname":  "קליק קורנפלקס"
+    },
+    {
+        "productprice":  6.8,
+        "barcode":  "013495113537",
+        "productname":  "קליק חום לבן"
+    },
+    {
+        "productprice":  6.8,
+        "barcode":  "013495113551",
+        "productname":  "קליק עוגי"
+    },
+    {
+        "productprice":  6,
+        "barcode":  "013495113575",
+        "productname":  "קליק בייגלה "
+    },
+    {
+        "productprice":  6.8,
+        "barcode":  "013495113582",
+        "productname":  "קליק כריות"
+    },
+    {
+        "productprice":  6,
+        "barcode":  "013495113612",
+        "productname":  "קליק ופל"
+    },
+    {
+        "productprice":  4.95,
+        "barcode":  "015000026493",
+        "productname":  "מחית בננה ותפוחים"
+    },
+    {
+        "productprice":  3.5,
+        "barcode":  "015000039653",
+        "productname":  "גרבר"
+    },
+    {
+        "productprice":  14.5,
+        "barcode":  "02700724",
+        "productname":  "פלמן מנטול"
+    },
+    {
+        "productprice":  13.5,
+        "barcode":  "02700821",
+        "productname":  "פלמן סופר"
+    },
+    {
+        "productprice":  14.5,
+        "barcode":  "02781127",
+        "productname":  "פלמן קצר"
+    },
+    {
+        "productprice":  14.5,
+        "barcode":  "02784221",
+        "productname":  "פלמן ארוך"
+    },
+    {
+        "productprice":  14.5,
+        "barcode":  "02785123",
+        "productname":  "פלמן אדום"
+    },
+    {
+        "productprice":  21,
+        "barcode":  "0279442",
+        "productname":  "קנט ארוך"
+    },
+    {
+        "productprice":  19,
+        "barcode":  "02796420",
+        "productname":  "קנט קצר"
+    },
+    {
+        "productprice":  24,
+        "barcode":  "0281252",
+        "productname":  "פרלמנט ארוך"
+    },
+    {
+        "productprice":  24,
+        "barcode":  "0281482",
+        "productname":  "פרלמנט בלו"
+    },
+    {
+        "productprice":  24,
+        "barcode":  "0281492",
+        "productname":  "פרלמנט קצר"
+    },
+    {
+        "productprice":  19,
+        "barcode":  "02814928",
+        "productname":  "פרלמנט קצר"
+    },
+    {
+        "productprice":  23,
+        "barcode":  "0282702",
+        "productname":  "מלכורו מדיום"
+    },
+    {
+        "productprice":  23,
+        "barcode":  "0283352",
+        "productname":  "מרלבורו אדום"
+    },
+    {
+        "productprice":  24,
+        "barcode":  "0283392",
+        "productname":  "פרלמנט לייט"
+    },
+    {
+        "productprice":  19,
+        "barcode":  "02833923",
+        "productname":  "פרלמנט סילבר"
+    },
+    {
+        "productprice":  18,
+        "barcode":  "0284512",
+        "productname":  "סיגריות ל.מ"
+    },
+    {
+        "productprice":  16,
+        "barcode":  "02845122",
+        "productname":  "סיגריות ל.מ"
+    },
+    {
+        "productprice":  16,
+        "barcode":  "02852025",
+        "productname":  "ל.מ ארוך"
+    },
+    {
+        "productprice":  20,
+        "barcode":  "0285272",
+        "productname":  "אלם לייט סגריות"
+    },
+    {
+        "productprice":  20,
+        "barcode":  "02852724",
+        "productname":  "ל.מ כחול קצר"
+    },
+    {
+        "productprice":  20,
+        "barcode":  "0285452",
+        "productname":  "סגריותL M"
+    },
+    {
+        "productprice":  20,
+        "barcode":  "02854528",
+        "productname":  "ל.מ אדום"
+    },
+    {
+        "productprice":  24,
+        "barcode":  "0287462",
+        "productname":  "פרלמנט לייט"
+    },
+    {
+        "productprice":  24,
+        "barcode":  "0287632",
+        "productname":  "פרלמנט קצר בלו"
+    },
+    {
+        "productprice":  12.95,
+        "barcode":  "028850021020",
+        "productname":  "שמן לתינוק"
+    },
+    {
+        "productprice":  24,
+        "barcode":  "0288502",
+        "productname":  "פרלמנט ארוך סופט"
+    },
+    {
+        "productprice":  23,
+        "barcode":  "0288692",
+        "productname":  "מלבורו לייט"
+    },
+    {
+        "productprice":  2.95,
+        "barcode":  "029424000373",
+        "productname":  "ופל שוקולד"
+    },
+    {
+        "productprice":  4.6,
+        "barcode":  "029424001257",
+        "productname":  "מנעמית"
+    },
+    {
+        "productprice":  10.95,
+        "barcode":  "037000229964",
+        "productname":  "פרינגלס"
+    }
+]

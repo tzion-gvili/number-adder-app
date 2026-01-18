@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Number Adder</string>
+    <string name="app_name">Makolet David</string>
+    <string name="select_product_prompt">Select a product</string>
 </resources>
 
