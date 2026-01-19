@@ -690,6 +690,9 @@
                 <button type="button" class="login-btn btn-login" onclick="handleLogin(event)">Login</button>
                 <button type="button" class="login-btn btn-register" onclick="handleRegister(event)">Create New Account</button>
                 <div class="login-info">Each user has their own product list</div>
+                <div class="login-info" style="margin-top: 15px; font-size: 13px; color: #ff6b6b; font-weight: 500; padding: 10px; background: #fff3cd; border-radius: 5px; border: 1px solid #ffc107;">
+                    ⚠️ Important: Accounts are stored per device/browser. If you created an account on another device, you need to create a new account here (you can use the same username and password).
+                </div>
                 <div class="footer" style="margin-top: 20px;">TzionGSofts +972 5914007</div>
             </div>
         </div>
@@ -1049,10 +1052,19 @@
                         const userExists = users[username] !== undefined;
                         if (userExists) {
                             console.error('Password hash mismatch. Stored:', storedHash, 'Tried:', allHashes.length, 'variations');
-                            showToast('Invalid password. Please check your password and try again.');
+                            console.error('Stored hash details:', {
+                                full: storedHash,
+                                length: storedHash ? storedHash.length : 0,
+                                startsWith: storedHash ? storedHash.substring(0, 5) : 'null'
+                            });
+                            showToast('❌ Invalid password. Each device has separate accounts. Click "Create New Account" below.');
                         } else {
                             console.error('User not found. Available users:', Object.keys(users));
-                            showToast('User not found. Please create an account or check the username.');
+                            if (Object.keys(users).length === 0) {
+                                showToast('ℹ️ No accounts on this device. Click "Create New Account" to get started.');
+                            } else {
+                                showToast('ℹ️ Account "' + username + '" not found on this device. Available: ' + Object.keys(users).join(', ') + '. Or create a new account.');
+                            }
                         }
                     }
                 } catch (e) {
