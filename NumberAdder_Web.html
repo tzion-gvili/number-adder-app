@@ -687,8 +687,8 @@
                     <label for="loginPassword">Password:</label>
                     <input type="password" id="loginPassword" placeholder="Enter password" autocomplete="current-password">
                 </div>
-                <button class="login-btn btn-login" onclick="handleLogin()">Login</button>
-                <button class="login-btn btn-register" onclick="handleRegister()">Create New Account</button>
+                <button type="button" class="login-btn btn-login" onclick="handleLogin()">Login</button>
+                <button type="button" class="login-btn btn-register" onclick="handleRegister()">Create New Account</button>
                 <div class="login-info">Each user has their own product list</div>
                 <div class="footer" style="margin-top: 20px;">TzionGSofts +972 5914007</div>
             </div>
@@ -816,37 +816,54 @@
 
         // Check if user is logged in on page load
         window.addEventListener('DOMContentLoaded', function() {
-            currentUser = localStorage.getItem('currentUser');
-            if (currentUser) {
-                showApp();
-            } else {
+            try {
+                currentUser = localStorage.getItem('currentUser');
+                console.log('Page loaded, currentUser:', currentUser);
+                if (currentUser && currentUser !== 'null' && currentUser !== '') {
+                    showApp();
+                } else {
+                    showLogin();
+                }
+            } catch (error) {
+                console.error('Error on page load:', error);
                 showLogin();
             }
         });
 
         // Password hashing (with fallback for non-HTTPS)
         async function hashPassword(password) {
+            if (!password || password === '') {
+                throw new Error('Password is empty');
+            }
+            
             try {
                 // Try using crypto.subtle (requires HTTPS or localhost)
                 if (crypto && crypto.subtle) {
-                    const encoder = new TextEncoder();
-                    const data = encoder.encode(password);
-                    const hashBuffer = await crypto.subtle.digest('SHA-256', data);
-                    const hashArray = Array.from(new Uint8Array(hashBuffer));
-                    return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+                    try {
+                        const encoder = new TextEncoder();
+                        const data = encoder.encode(password);
+                        const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+                        const hashArray = Array.from(new Uint8Array(hashBuffer));
+                        return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+                    } catch (e) {
+                        console.log('crypto.subtle failed, using fallback:', e);
+                    }
                 }
             } catch (e) {
                 console.log('crypto.subtle not available, using fallback');
             }
             
-            // Fallback: simple hash (works everywhere)
+            // Fallback: consistent hash (works everywhere, always same result for same input)
             let hash = 0;
             for (let i = 0; i < password.length; i++) {
                 const char = password.charCodeAt(i);
                 hash = ((hash << 5) - hash) + char;
                 hash = hash & hash; // Convert to 32bit integer
             }
-            return Math.abs(hash).toString(16) + password.length.toString();
+            // Make it consistent and longer
+            const hashStr = Math.abs(hash).toString(16).padStart(8, '0');
+            const lenStr = password.length.toString().padStart(2, '0');
+            return 'h' + hashStr + lenStr;
         }
 
         // User management
@@ -860,16 +877,33 @@
         }
 
         function handleLogin() {
-            const username = document.getElementById('loginUsername').value.trim();
-            const password = document.getElementById('loginPassword').value.trim();
+            const usernameInput = document.getElementById('loginUsername');
+            const passwordInput = document.getElementById('loginPassword');
+            
+            if (!usernameInput || !passwordInput) {
+                showToast('Form fields not found. Please refresh the page.');
+                return;
+            }
+            
+            const username = usernameInput.value.trim();
+            const password = passwordInput.value.trim();
 
-            if (!username || !password) {
-                showToast('Please enter username and password');
+            if (!username || username === '') {
+                showToast('Please enter username');
+                usernameInput.focus();
+                return;
+            }
+
+            if (!password || password === '') {
+                showToast('Please enter password');
+                passwordInput.focus();
                 return;
             }
 
             hashPassword(password).then(hashedPassword => {
                 const users = getUsers();
+                console.log('Login attempt:', { username, hashedPassword: hashedPassword.substring(0, 10) + '...', usersExist: Object.keys(users).length });
+                
                 if (users[username] && users[username] === hashedPassword) {
                     currentUser = username;
                     localStorage.setItem('currentUser', username);
@@ -885,41 +919,79 @@
         }
 
         function handleRegister() {
-            const username = document.getElementById('loginUsername').value.trim();
-            const password = document.getElementById('loginPassword').value.trim();
+            const usernameInput = document.getElementById('loginUsername');
+            const passwordInput = document.getElementById('loginPassword');
+            
+            if (!usernameInput || !passwordInput) {
+                showToast('Form fields not found. Please refresh the page.');
+                return;
+            }
+            
+            const username = usernameInput.value.trim();
+            const password = passwordInput.value.trim();
 
-            if (!username || !password) {
-                showToast('Please enter username and password');
+            if (!username || username === '') {
+                showToast('Please enter username');
+                usernameInput.focus();
+                return;
+            }
+
+            if (!password || password === '') {
+                showToast('Please enter password');
+                passwordInput.focus();
                 return;
             }
 
             if (username.length < 3) {
                 showToast('Username must be at least 3 characters');
+                usernameInput.focus();
                 return;
             }
 
             if (password.length < 3) {
                 showToast('Password must be at least 3 characters');
+                passwordInput.focus();
                 return;
             }
 
             hashPassword(password).then(hashedPassword => {
-                const users = getUsers();
-                if (users[username]) {
-                    showToast('Username already exists');
-                    return;
-                }
+                try {
+                    const users = getUsers();
+                    console.log('Registration attempt:', { username, hashedPassword: hashedPassword.substring(0, 10) + '...' });
+                    
+                    if (users[username]) {
+                        showToast('Username already exists. Please choose another.');
+                        usernameInput.focus();
+                        return;
+                    }
 
-                users[username] = hashedPassword;
-                saveUsers(users);
-                currentUser = username;
-                localStorage.setItem('currentUser', username);
-                
-                // Initialize with example product for new user
-                saveUserProducts([...EXAMPLE_PRODUCT]);
-                
-                showApp();
-                showToast('Account created! Welcome, ' + username + '!');
+                    // Save user
+                    users[username] = hashedPassword;
+                    saveUsers(users);
+                    console.log('User saved:', username);
+                    
+                    // Set current user
+                    currentUser = username;
+                    localStorage.setItem('currentUser', username);
+                    console.log('Current user set:', currentUser);
+                    
+                    // Initialize with example product for new user
+                    try {
+                        saveUserProducts([...EXAMPLE_PRODUCT]);
+                        console.log('Example products saved');
+                    } catch (e) {
+                        console.error('Error saving products:', e);
+                    }
+                    
+                    // Show app with small delay to ensure everything is saved
+                    setTimeout(() => {
+                        showApp();
+                        showToast('Account created! Welcome, ' + username + '!');
+                    }, 100);
+                } catch (error) {
+                    console.error('Error in registration process:', error);
+                    showToast('Error during registration: ' + error.message);
+                }
             }).catch(error => {
                 console.error('Registration error:', error);
                 showToast('Error during registration. Please try again.');
@@ -944,12 +1016,42 @@
         }
 
         function showApp() {
-            document.getElementById('loginContainer').style.display = 'none';
-            document.getElementById('appContainer').style.display = 'flex';
-            document.getElementById('usernameDisplay').textContent = 'User: ' + currentUser;
-            loadUserProducts();
-            initProductSelect();
-            updateDisplay();
+            // Double-check currentUser from localStorage
+            const storedUser = localStorage.getItem('currentUser');
+            if (!currentUser && storedUser) {
+                currentUser = storedUser;
+                console.log('Restored currentUser from localStorage:', currentUser);
+            }
+            
+            if (!currentUser) {
+                console.error('showApp called but currentUser is null');
+                showLogin();
+                return;
+            }
+            
+            try {
+                const loginContainer = document.getElementById('loginContainer');
+                const appContainer = document.getElementById('appContainer');
+                const usernameDisplay = document.getElementById('usernameDisplay');
+                
+                if (!loginContainer || !appContainer || !usernameDisplay) {
+                    console.error('Required elements not found');
+                    return;
+                }
+                
+                loginContainer.style.display = 'none';
+                appContainer.style.display = 'flex';
+                usernameDisplay.textContent = 'User: ' + currentUser;
+                
+                loadUserProducts();
+                initProductSelect();
+                updateDisplay();
+                
+                console.log('App shown successfully for user:', currentUser);
+            } catch (error) {
+                console.error('Error showing app:', error);
+                showToast('Error loading app. Please refresh the page.');
+            }
         }
 
         // Product management
