@@ -914,6 +914,39 @@
             });
         }
 
+        // Generate ALL possible hash variations to match any stored format
+        function generateAllHashVariations(password) {
+            const variations = [];
+            
+            // Base hash calculation
+            let hash = 0;
+            for (let i = 0; i < password.length; i++) {
+                const char = password.charCodeAt(i);
+                hash = ((hash << 5) - hash) + char;
+                hash = hash & hash;
+            }
+            const hashStr = Math.abs(hash).toString(16).padStart(8, '0');
+            const lenStr = password.length.toString().padStart(2, '0');
+            
+            // Variation 1: h + hash + length (current format)
+            variations.push('h' + hashStr + lenStr);
+            
+            // Variation 2: h + hash + length + firstChar + lastChar (old format)
+            if (password.length > 0) {
+                const firstChar = password.charCodeAt(0).toString(16).padStart(4, '0');
+                const lastChar = password.charCodeAt(password.length - 1).toString(16).padStart(4, '0');
+                variations.push('h' + hashStr + lenStr + firstChar + lastChar);
+            }
+            
+            // Variation 3: Just hash with h prefix, no length
+            variations.push('h' + hashStr);
+            
+            // Variation 4: Hash with length, no h prefix
+            variations.push(hashStr + lenStr);
+            
+            return Promise.resolve(variations);
+        }
+
         // User management
         function getUsers() {
             try {
@@ -973,34 +1006,35 @@
                 loginBtn.textContent = 'Logging in...';
             }
 
-            // Try all hash formats for backward compatibility
+            // Try ALL possible hash formats for maximum compatibility
             Promise.all([
-                hashPassword(password), 
-                hashPasswordOldFormat(password),
+                generateAllHashVariations(password),
                 hashPasswordSHA256(password)
-            ]).then(([hashedPassword, hashedPasswordOld, hashedPasswordSHA256]) => {
+            ]).then(([hashVariations, hashedPasswordSHA256]) => {
                 try {
                     const users = getUsers();
                     const storedHash = users[username];
+                    
+                    // Add SHA-256 to variations list
+                    const allHashes = [...hashVariations, hashedPasswordSHA256];
+                    
                     console.log('=== LOGIN DEBUG ===');
                     console.log('Username:', username);
-                    console.log('New format hash:', hashedPassword);
-                    console.log('Old format hash:', hashedPasswordOld);
-                    console.log('SHA-256 hash:', hashedPasswordSHA256);
+                    console.log('Password length:', password.length);
                     console.log('Stored hash:', storedHash);
-                    console.log('Hash length - New:', hashedPassword.length, 'Old:', hashedPasswordOld.length, 'SHA256:', hashedPasswordSHA256.length, 'Stored:', storedHash ? storedHash.length : 0);
-                    console.log('Match new?', storedHash === hashedPassword);
-                    console.log('Match old?', storedHash === hashedPasswordOld);
-                    console.log('Match SHA256?', storedHash === hashedPasswordSHA256);
-                    console.log('All users:', Object.keys(users));
+                    console.log('Stored hash length:', storedHash ? storedHash.length : 0);
+                    console.log('Trying', allHashes.length, 'hash variations:');
+                    allHashes.forEach((hash, idx) => {
+                        const match = storedHash === hash;
+                        console.log(`  ${idx + 1}. ${hash.substring(0, 30)}... (len: ${hash.length}) ${match ? '✅ MATCH!' : '❌'}`);
+                    });
+                    console.log('All users in system:', Object.keys(users));
                     console.log('==================');
                     
-                    // Check all hash formats for backward compatibility
-                    if (users[username] && (
-                        users[username] === hashedPassword || 
-                        users[username] === hashedPasswordOld ||
-                        users[username] === hashedPasswordSHA256
-                    )) {
+                    // Check if ANY hash variation matches
+                    const matched = allHashes.some(hash => users[username] === hash);
+                    
+                    if (users[username] && matched) {
                         currentUser = username;
                         try {
                             localStorage.setItem('currentUser', username);
@@ -1011,7 +1045,15 @@
                             showToast('Login successful but error saving session. Please refresh.');
                         }
                     } else {
-                        showToast('Invalid username or password');
+                        // Show helpful error message
+                        const userExists = users[username] !== undefined;
+                        if (userExists) {
+                            console.error('Password hash mismatch. Stored:', storedHash, 'Tried:', allHashes.length, 'variations');
+                            showToast('Invalid password. Please check your password and try again.');
+                        } else {
+                            console.error('User not found. Available users:', Object.keys(users));
+                            showToast('User not found. Please create an account or check the username.');
+                        }
                     }
                 } catch (e) {
                     console.error('Error in login process:', e);
