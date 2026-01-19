@@ -958,9 +958,24 @@
                     const users = getUsers();
                     const storedHash = users[username];
                     
+                    // DEBUG: Log everything
+                    console.log('=== LOGIN DEBUG ===');
+                    console.log('Username:', username);
+                    console.log('Password entered:', password.length, 'characters');
+                    console.log('Current hash:', hashedPassword);
+                    console.log('Old hash:', hashedPasswordOld);
+                    console.log('Stored hash:', storedHash);
+                    console.log('Stored hash length:', storedHash ? storedHash.length : 'null');
+                    console.log('User exists?', users[username] !== undefined);
+                    console.log('All users:', Object.keys(users));
+                    console.log('Match current?', storedHash === hashedPassword);
+                    console.log('Match old?', storedHash === hashedPasswordOld);
+                    console.log('==================');
+                    
                     // Check current format first (most common)
                     if (users[username] && users[username] === hashedPassword) {
                         // Current format matches - login
+                        console.log('✅ Login successful with current format');
                         currentUser = username;
                         localStorage.setItem('currentUser', username);
                         showApp();
@@ -969,6 +984,7 @@
                     // Check old format - if matches, update to current format and login
                     else if (users[username] && users[username] === hashedPasswordOld) {
                         // Old format matches - update to current format and login
+                        console.log('✅ Login successful with old format, updating...');
                         users[username] = hashedPassword;
                         saveUsers(users);
                         currentUser = username;
@@ -978,6 +994,7 @@
                     }
                     // User doesn't exist
                     else if (!users[username]) {
+                        console.log('❌ User not found');
                         if (Object.keys(users).length === 0) {
                             showToast('ℹ️ No accounts on this device. Click "Create New Account" to get started.');
                         } else {
@@ -986,7 +1003,10 @@
                     }
                     // User exists but password wrong
                     else {
-                        showToast('❌ Invalid password. Click "Create New Account" if this is a new device.');
+                        console.log('❌ Password mismatch');
+                        console.log('Expected one of:', [hashedPassword, hashedPasswordOld]);
+                        console.log('Got:', storedHash);
+                        showToast('❌ Invalid password. Stored: ' + (storedHash ? storedHash.substring(0, 10) + '...' : 'null') + ', Try creating a new account.');
                     }
                 } catch (e) {
                     console.error('Error in login process:', e);
@@ -1064,20 +1084,19 @@
                     const users = getUsers();
                     console.log('Registration attempt:', { username, hashedPassword: hashedPassword.substring(0, 15) + '...' });
                     
+                    // If username exists, update password (password reset functionality)
                     if (users[username]) {
-                        showToast('Username already exists. Please choose another.');
-                        usernameInput.focus();
-                        if (registerBtn) {
-                            registerBtn.disabled = false;
-                            if (originalText) registerBtn.textContent = originalText;
-                        }
-                        return;
+                        console.log('Username exists, updating password hash...');
+                        users[username] = hashedPassword;
+                        saveUsers(users);
+                        console.log('Password updated for:', username);
+                        showToast('Password updated for ' + username + '!');
+                    } else {
+                        // Save new user
+                        users[username] = hashedPassword;
+                        saveUsers(users);
+                        console.log('New user saved:', username);
                     }
-
-                    // Save user
-                    users[username] = hashedPassword;
-                    saveUsers(users);
-                    console.log('User saved:', username);
                     
                     // Set current user
                     currentUser = username;
