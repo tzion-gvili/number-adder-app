@@ -889,66 +889,6 @@
             });
         }
 
-        // Try SHA-256 hash (in case original used crypto.subtle)
-        function hashPasswordSHA256(password) {
-            if (!password || password === '') {
-                return Promise.reject(new Error('Password is empty'));
-            }
-            return new Promise(async (resolve, reject) => {
-                try {
-                    if (window.isSecureContext && crypto && crypto.subtle) {
-                        try {
-                            const encoder = new TextEncoder();
-                            const data = encoder.encode(password);
-                            const hashBuffer = await crypto.subtle.digest('SHA-256', data);
-                            const hashArray = Array.from(new Uint8Array(hashBuffer));
-                            resolve(hashArray.map(b => b.toString(16).padStart(2, '0')).join(''));
-                            return;
-                        } catch (e) {
-                            console.warn('SHA-256 failed, using fallback:', e);
-                        }
-                    }
-                    // Fallback to simple hash if SHA-256 not available
-                    hashPassword(password).then(resolve).catch(reject);
-                } catch (e) {
-                    console.error('Hash SHA256 error:', e);
-                    hashPassword(password).then(resolve).catch(reject);
-                }
-            });
-        }
-
-        // Generate ALL possible hash variations to match any stored format
-        function generateAllHashVariations(password) {
-            const variations = [];
-            
-            // Base hash calculation
-            let hash = 0;
-            for (let i = 0; i < password.length; i++) {
-                const char = password.charCodeAt(i);
-                hash = ((hash << 5) - hash) + char;
-                hash = hash & hash;
-            }
-            const hashStr = Math.abs(hash).toString(16).padStart(8, '0');
-            const lenStr = password.length.toString().padStart(2, '0');
-            
-            // Variation 1: h + hash + length (current format)
-            variations.push('h' + hashStr + lenStr);
-            
-            // Variation 2: h + hash + length + firstChar + lastChar (old format)
-            if (password.length > 0) {
-                const firstChar = password.charCodeAt(0).toString(16).padStart(4, '0');
-                const lastChar = password.charCodeAt(password.length - 1).toString(16).padStart(4, '0');
-                variations.push('h' + hashStr + lenStr + firstChar + lastChar);
-            }
-            
-            // Variation 3: Just hash with h prefix, no length
-            variations.push('h' + hashStr);
-            
-            // Variation 4: Hash with length, no h prefix
-            variations.push(hashStr + lenStr);
-            
-            return Promise.resolve(variations);
-        }
 
         // User management
         function getUsers() {
@@ -1009,63 +949,44 @@
                 loginBtn.textContent = 'Logging in...';
             }
 
-            // Try ALL possible hash formats for maximum compatibility
+            // SIMPLE FIX: Try current format and old format, auto-update if old format matches
             Promise.all([
-                generateAllHashVariations(password),
-                hashPasswordSHA256(password)
-            ]).then(([hashVariations, hashedPasswordSHA256]) => {
+                hashPassword(password),
+                hashPasswordOldFormat(password)
+            ]).then(([hashedPassword, hashedPasswordOld]) => {
                 try {
                     const users = getUsers();
                     const storedHash = users[username];
                     
-                    // Add SHA-256 to variations list
-                    const allHashes = [...hashVariations, hashedPasswordSHA256];
-                    
-                    console.log('=== LOGIN DEBUG ===');
-                    console.log('Username:', username);
-                    console.log('Password length:', password.length);
-                    console.log('Stored hash:', storedHash);
-                    console.log('Stored hash length:', storedHash ? storedHash.length : 0);
-                    console.log('Trying', allHashes.length, 'hash variations:');
-                    allHashes.forEach((hash, idx) => {
-                        const match = storedHash === hash;
-                        console.log(`  ${idx + 1}. ${hash.substring(0, 30)}... (len: ${hash.length}) ${match ? '✅ MATCH!' : '❌'}`);
-                    });
-                    console.log('All users in system:', Object.keys(users));
-                    console.log('==================');
-                    
-                    // Check if ANY hash variation matches
-                    const matched = allHashes.some(hash => users[username] === hash);
-                    
-                    if (users[username] && matched) {
+                    // Check current format first (most common)
+                    if (users[username] && users[username] === hashedPassword) {
+                        // Current format matches - login
                         currentUser = username;
-                        try {
-                            localStorage.setItem('currentUser', username);
-                            showApp();
-                            showToast('Welcome, ' + username + '!');
-                        } catch (e) {
-                            console.error('Error saving currentUser:', e);
-                            showToast('Login successful but error saving session. Please refresh.');
-                        }
-                    } else {
-                        // Show helpful error message
-                        const userExists = users[username] !== undefined;
-                        if (userExists) {
-                            console.error('Password hash mismatch. Stored:', storedHash, 'Tried:', allHashes.length, 'variations');
-                            console.error('Stored hash details:', {
-                                full: storedHash,
-                                length: storedHash ? storedHash.length : 0,
-                                startsWith: storedHash ? storedHash.substring(0, 5) : 'null'
-                            });
-                            showToast('❌ Invalid password. Each device has separate accounts. Click "Create New Account" below.');
+                        localStorage.setItem('currentUser', username);
+                        showApp();
+                        showToast('Welcome, ' + username + '!');
+                    } 
+                    // Check old format - if matches, update to current format and login
+                    else if (users[username] && users[username] === hashedPasswordOld) {
+                        // Old format matches - update to current format and login
+                        users[username] = hashedPassword;
+                        saveUsers(users);
+                        currentUser = username;
+                        localStorage.setItem('currentUser', username);
+                        showApp();
+                        showToast('Welcome, ' + username + '! (Password updated)');
+                    }
+                    // User doesn't exist
+                    else if (!users[username]) {
+                        if (Object.keys(users).length === 0) {
+                            showToast('ℹ️ No accounts on this device. Click "Create New Account" to get started.');
                         } else {
-                            console.error('User not found. Available users:', Object.keys(users));
-                            if (Object.keys(users).length === 0) {
-                                showToast('ℹ️ No accounts on this device. Click "Create New Account" to get started.');
-                            } else {
-                                showToast('ℹ️ Account "' + username + '" not found on this device. Available: ' + Object.keys(users).join(', ') + '. Or create a new account.');
-                            }
+                            showToast('ℹ️ Account "' + username + '" not found. Available: ' + Object.keys(users).join(', '));
                         }
+                    }
+                    // User exists but password wrong
+                    else {
+                        showToast('❌ Invalid password. Click "Create New Account" if this is a new device.');
                     }
                 } catch (e) {
                     console.error('Error in login process:', e);
