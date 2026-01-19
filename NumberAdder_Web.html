@@ -35,22 +35,156 @@
             height: calc(100vh - 20px);
         }
 
+        /* Login Screen Styles */
+        .login-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 40px 20px;
+            min-height: 100%;
+        }
+
+        .login-card {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .login-title {
+            text-align: center;
+            font-size: 32px;
+            font-weight: bold;
+            color: #4CAF50;
+            margin-bottom: 30px;
+        }
+
+        .login-form-group {
+            margin-bottom: 20px;
+        }
+
+        .login-form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 500;
+        }
+
+        .login-form-group input {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .login-form-group input:focus {
+            border-color: #4CAF50;
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 15px;
+            font-size: 18px;
+            font-weight: bold;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-bottom: 10px;
+            transition: transform 0.2s;
+        }
+
+        .login-btn:active {
+            transform: scale(0.98);
+        }
+
+        .btn-login {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .btn-login:hover {
+            background: #45a049;
+        }
+
+        .btn-register {
+            background: #2196F3;
+            color: white;
+        }
+
+        .btn-register:hover {
+            background: #1976D2;
+        }
+
+        .login-info {
+            text-align: center;
+            color: #666;
+            font-size: 14px;
+            margin-top: 20px;
+        }
+
+        /* Main App Styles */
+        .app-container {
+            display: none;
+            flex-direction: column;
+            height: 100%;
+        }
+
         .header {
             background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
             color: white;
-            padding: 20px;
-            text-align: center;
-            font-size: 24px;
-            font-weight: bold;
+            padding: 15px 20px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
 
-        .caption {
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .header-title {
+            font-size: 24px;
+            font-weight: bold;
+            flex: 1;
+            text-align: center;
+        }
+
+        .header-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .header-btn {
+            padding: 6px 12px;
+            font-size: 12px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .btn-edit {
+            background: #66BB6A;
+            color: white;
+        }
+
+        .btn-logout {
+            background: #FF5722;
+            color: white;
+        }
+
+        .username-display {
+            text-align: center;
             font-size: 14px;
-            font-weight: normal;
             opacity: 0.9;
             margin-top: 5px;
-            font-style: italic;
         }
 
         .product-section {
@@ -82,6 +216,41 @@
         #productSelect:focus {
             border-color: #2E7D32;
             box-shadow: 0 0 5px rgba(76, 175, 80, 0.3);
+        }
+
+        .barcode-section {
+            padding: 20px;
+            background: #FFF3E0;
+            border-bottom: 2px solid #ffe0b2;
+        }
+
+        .barcode-group {
+            display: flex;
+            gap: 10px;
+        }
+
+        #barcodeInput {
+            flex: 1;
+            padding: 15px;
+            font-size: 18px;
+            border: 2px solid #FF9800;
+            border-radius: 8px;
+            outline: none;
+        }
+
+        #barcodeInput:focus {
+            border-color: #F57C00;
+        }
+
+        .btn-search {
+            padding: 15px 25px;
+            background: #FF9800;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
         }
 
         .input-section {
@@ -276,6 +445,86 @@
             }
         }
 
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            max-width: 90%;
+            max-height: 80vh;
+            width: 600px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .modal-header {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .modal-textarea {
+            width: 100%;
+            min-height: 300px;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-family: monospace;
+            font-size: 12px;
+            resize: vertical;
+            margin-bottom: 15px;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+
+        .modal-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .btn-save {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .btn-cancel {
+            background: #999;
+            color: white;
+        }
+
+        .btn-reset {
+            background: #FF9800;
+            color: white;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 10px;
+            color: #999;
+            font-size: 10px;
+        }
+
         @media (max-width: 480px) {
             .container {
                 height: 100vh;
@@ -287,7 +536,7 @@
                 padding: 15px;
             }
 
-            #numberInput {
+            #numberInput, #barcodeInput {
                 font-size: 16px;
                 padding: 12px;
             }
@@ -300,9 +549,38 @@
     </style>
 </head>
 <body>
-    <div class="container">
+    <!-- Login Screen -->
+    <div class="container" id="loginContainer">
+        <div class="login-container">
+            <div class="login-card">
+                <div class="login-title">📱 Makolet David</div>
+                <div class="login-form-group">
+                    <label for="loginUsername">Username:</label>
+                    <input type="text" id="loginUsername" placeholder="Enter username" autocomplete="username">
+                </div>
+                <div class="login-form-group">
+                    <label for="loginPassword">Password:</label>
+                    <input type="password" id="loginPassword" placeholder="Enter password" autocomplete="current-password">
+                </div>
+                <button class="login-btn btn-login" onclick="handleLogin()">Login</button>
+                <button class="login-btn btn-register" onclick="handleRegister()">Create New Account</button>
+                <div class="login-info">Each user has their own product list</div>
+                <div class="footer" style="margin-top: 20px;">TzionGSofts +972 5914007</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main App -->
+    <div class="container app-container" id="appContainer">
         <div class="header">
-            📱 Makolet David
+            <div class="header-top">
+                <div class="header-title">📱 Makolet David</div>
+                <div class="header-buttons">
+                    <button class="header-btn btn-edit" onclick="showEditProducts()">✏️ Edit</button>
+                    <button class="header-btn btn-logout" onclick="handleLogout()">🚪 Logout</button>
+                </div>
+            </div>
+            <div class="username-display" id="usernameDisplay">User: </div>
         </div>
 
         <div class="product-section">
@@ -310,6 +588,18 @@
             <select id="productSelect">
                 <option value="">-- Select Product --</option>
             </select>
+        </div>
+
+        <div class="barcode-section">
+            <div class="barcode-group">
+                <input 
+                    type="text" 
+                    id="barcodeInput" 
+                    placeholder="Enter barcode"
+                    autocomplete="off"
+                >
+                <button class="btn-search" onclick="searchBarcode()">Search</button>
+            </div>
         </div>
 
         <div class="input-section">
@@ -344,13 +634,28 @@
             </div>
             <button class="btn btn-clear" onclick="clearAll()">🗑️ Clear All</button>
         </div>
+
+        <div class="footer">TzionGSofts +972 5914007</div>
+    </div>
+
+    <!-- Edit Products Modal -->
+    <div class="modal" id="editModal">
+        <div class="modal-content">
+            <div class="modal-header">Edit Products JSON (Max 100 products)</div>
+            <textarea class="modal-textarea" id="productsTextarea"></textarea>
+            <div class="modal-buttons">
+                <button class="modal-btn btn-reset" onclick="resetProducts()">Reset to Default</button>
+                <button class="modal-btn btn-cancel" onclick="closeEditModal()">Cancel</button>
+                <button class="modal-btn btn-save" onclick="saveProducts()">Save</button>
+            </div>
+        </div>
     </div>
 
     <div class="toast" id="toast"></div>
 
     <script>
-        // Products data (from JSON)
-        const products = [
+        // Default products (used when user has no products)
+        const DEFAULT_PRODUCTS = [
             {"productprice": 6.5, "barcode": "010772016147", "productname": "מגבונים"},
             {"productprice": 15, "barcode": "0123003", "productname": "סיגריות מגנה"},
             {"productprice": 16, "barcode": "01230234", "productname": "קאמל סופט"},
@@ -360,69 +665,210 @@
             {"productprice": 20, "barcode": "0123123", "productname": "וינסטון אדום"},
             {"productprice": 20, "barcode": "0123193", "productname": "ונסטון ליט"},
             {"productprice": 20, "barcode": "01231932", "productname": "וינסטון"},
-            {"productprice": 15, "barcode": "0123250", "productname": "מגנה כחול"},
-            {"productprice": 6.8, "barcode": "013495113506", "productname": "קליק ביסקויט"},
-            {"productprice": 6.9, "barcode": "013495113513", "productname": "קליק כדורים"},
-            {"productprice": 6.8, "barcode": "013495113520", "productname": "קליק קורנפלקס"},
-            {"productprice": 6.8, "barcode": "013495113537", "productname": "קליק חום לבן"},
-            {"productprice": 6.8, "barcode": "013495113551", "productname": "קליק עוגי"},
-            {"productprice": 6, "barcode": "013495113575", "productname": "קליק בייגלה "},
-            {"productprice": 6.8, "barcode": "013495113582", "productname": "קליק כריות"},
-            {"productprice": 6, "barcode": "013495113612", "productname": "קליק ופל"},
-            {"productprice": 4.95, "barcode": "015000026493", "productname": "מחית בננה ותפוחים"},
-            {"productprice": 3.5, "barcode": "015000039653", "productname": "גרבר"},
-            {"productprice": 14.5, "barcode": "02700724", "productname": "פלמן מנטול"},
-            {"productprice": 13.5, "barcode": "02700821", "productname": "פלמן סופר"},
-            {"productprice": 14.5, "barcode": "02781127", "productname": "פלמן קצר"},
-            {"productprice": 14.5, "barcode": "02784221", "productname": "פלמן ארוך"},
-            {"productprice": 14.5, "barcode": "02785123", "productname": "פלמן אדום"},
-            {"productprice": 21, "barcode": "0279442", "productname": "קנט ארוך"},
-            {"productprice": 19, "barcode": "02796420", "productname": "קנט קצר"},
-            {"productprice": 24, "barcode": "0281252", "productname": "פרלמנט ארוך"},
-            {"productprice": 24, "barcode": "0281482", "productname": "פרלמנט בלו"},
-            {"productprice": 24, "barcode": "0281492", "productname": "פרלמנט קצר"},
-            {"productprice": 19, "barcode": "02814928", "productname": "פרלמנט קצר"},
-            {"productprice": 23, "barcode": "0282702", "productname": "מלכורו מדיום"},
-            {"productprice": 23, "barcode": "0283352", "productname": "מרלבורו אדום"},
-            {"productprice": 24, "barcode": "0283392", "productname": "פרלמנט לייט"},
-            {"productprice": 19, "barcode": "02833923", "productname": "פרלמנט סילבר"},
-            {"productprice": 18, "barcode": "0284512", "productname": "סיגריות ל.מ"},
-            {"productprice": 16, "barcode": "02845122", "productname": "סיגריות ל.מ"},
-            {"productprice": 16, "barcode": "02852025", "productname": "ל.מ ארוך"},
-            {"productprice": 20, "barcode": "0285272", "productname": "אלם לייט סגריות"},
-            {"productprice": 20, "barcode": "02852724", "productname": "ל.מ כחול קצר"},
-            {"productprice": 20, "barcode": "0285452", "productname": "סגריותL M"},
-            {"productprice": 20, "barcode": "02854528", "productname": "ל.מ אדום"},
-            {"productprice": 24, "barcode": "0287462", "productname": "פרלמנט לייט"},
-            {"productprice": 24, "barcode": "0287632", "productname": "פרלמנט קצר בלו"},
-            {"productprice": 12.95, "barcode": "028850021020", "productname": "שמן לתינוק"},
-            {"productprice": 24, "barcode": "0288502", "productname": "פרלמנט ארוך סופט"},
-            {"productprice": 23, "barcode": "0288692", "productname": "מלבורו לייט"},
-            {"productprice": 2.95, "barcode": "029424000373", "productname": "ופל שוקולד"},
-            {"productprice": 4.6, "barcode": "029424001257", "productname": "מנעמית"}
+            {"productprice": 15, "barcode": "0123250", "productname": "מגנה כחול"}
         ];
 
-        let items = []; // Changed from numbers to items to support both products and free numbers
+        const MAX_PRODUCTS = 100;
+        let currentUser = null;
+        let products = [];
+        let items = [];
 
-        function formatNumber(num) {
-            return new Intl.NumberFormat('en-US', {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2
-            }).format(num);
+        // Check if user is logged in on page load
+        window.addEventListener('DOMContentLoaded', function() {
+            currentUser = localStorage.getItem('currentUser');
+            if (currentUser) {
+                showApp();
+            } else {
+                showLogin();
+            }
+        });
+
+        // Password hashing (simple SHA-256)
+        async function hashPassword(password) {
+            const encoder = new TextEncoder();
+            const data = encoder.encode(password);
+            const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+            return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
         }
 
-        function showToast(message) {
-            const toast = document.getElementById('toast');
-            toast.textContent = message;
-            toast.style.display = 'block';
-            setTimeout(() => {
-                toast.style.display = 'none';
-            }, 2000);
+        // User management
+        function getUsers() {
+            const usersData = localStorage.getItem('users');
+            return usersData ? JSON.parse(usersData) : {};
         }
 
-        // Initialize product dropdown
+        function saveUsers(users) {
+            localStorage.setItem('users', JSON.stringify(users));
+        }
+
+        function handleLogin() {
+            const username = document.getElementById('loginUsername').value.trim();
+            const password = document.getElementById('loginPassword').value.trim();
+
+            if (!username || !password) {
+                showToast('Please enter username and password');
+                return;
+            }
+
+            hashPassword(password).then(hashedPassword => {
+                const users = getUsers();
+                if (users[username] && users[username] === hashedPassword) {
+                    currentUser = username;
+                    localStorage.setItem('currentUser', username);
+                    showApp();
+                    showToast('Welcome, ' + username + '!');
+                } else {
+                    showToast('Invalid username or password');
+                }
+            });
+        }
+
+        function handleRegister() {
+            const username = document.getElementById('loginUsername').value.trim();
+            const password = document.getElementById('loginPassword').value.trim();
+
+            if (!username || !password) {
+                showToast('Please enter username and password');
+                return;
+            }
+
+            if (username.length < 3) {
+                showToast('Username must be at least 3 characters');
+                return;
+            }
+
+            if (password.length < 3) {
+                showToast('Password must be at least 3 characters');
+                return;
+            }
+
+            hashPassword(password).then(hashedPassword => {
+                const users = getUsers();
+                if (users[username]) {
+                    showToast('Username already exists');
+                    return;
+                }
+
+                users[username] = hashedPassword;
+                saveUsers(users);
+                currentUser = username;
+                localStorage.setItem('currentUser', username);
+                
+                // Initialize empty products for new user
+                saveUserProducts([]);
+                
+                showApp();
+                showToast('Account created! Welcome, ' + username + '!');
+            });
+        }
+
+        function handleLogout() {
+            if (confirm('Are you sure you want to logout?')) {
+                currentUser = null;
+                localStorage.removeItem('currentUser');
+                items = [];
+                showLogin();
+                showToast('Logged out successfully');
+            }
+        }
+
+        function showLogin() {
+            document.getElementById('loginContainer').style.display = 'flex';
+            document.getElementById('appContainer').style.display = 'none';
+            document.getElementById('loginUsername').value = '';
+            document.getElementById('loginPassword').value = '';
+        }
+
+        function showApp() {
+            document.getElementById('loginContainer').style.display = 'none';
+            document.getElementById('appContainer').style.display = 'flex';
+            document.getElementById('usernameDisplay').textContent = 'User: ' + currentUser;
+            loadUserProducts();
+            initProductSelect();
+            updateDisplay();
+        }
+
+        // Product management
+        function getUserProductsKey() {
+            return 'products_' + currentUser;
+        }
+
+        function loadUserProducts() {
+            const productsData = localStorage.getItem(getUserProductsKey());
+            if (productsData) {
+                try {
+                    products = JSON.parse(productsData);
+                } catch (e) {
+                    products = [...DEFAULT_PRODUCTS];
+                }
+            } else {
+                products = [...DEFAULT_PRODUCTS];
+            }
+        }
+
+        function saveUserProducts(productsToSave) {
+            localStorage.setItem(getUserProductsKey(), JSON.stringify(productsToSave));
+            products = productsToSave;
+        }
+
+        function showEditProducts() {
+            const productsJson = JSON.stringify(products, null, 2);
+            document.getElementById('productsTextarea').value = productsJson;
+            document.getElementById('editModal').style.display = 'flex';
+        }
+
+        function closeEditModal() {
+            document.getElementById('editModal').style.display = 'none';
+        }
+
+        function saveProducts() {
+            const productsText = document.getElementById('productsTextarea').value.trim();
+            
+            try {
+                const newProducts = JSON.parse(productsText);
+                
+                if (!Array.isArray(newProducts)) {
+                    showToast('Products must be an array');
+                    return;
+                }
+
+                if (newProducts.length > MAX_PRODUCTS) {
+                    showToast('Maximum ' + MAX_PRODUCTS + ' products allowed. You have ' + newProducts.length);
+                    return;
+                }
+
+                // Validate product structure
+                for (let product of newProducts) {
+                    if (!product.barcode || !product.productname || product.productprice === undefined) {
+                        showToast('Invalid product format. Each product needs: barcode, productname, productprice');
+                        return;
+                    }
+                }
+
+                saveUserProducts(newProducts);
+                initProductSelect();
+                closeEditModal();
+                showToast('Products saved successfully! (' + newProducts.length + '/' + MAX_PRODUCTS + ')');
+            } catch (e) {
+                showToast('Invalid JSON: ' + e.message);
+            }
+        }
+
+        function resetProducts() {
+            if (confirm('Reset to default products? This will replace your current products.')) {
+                saveUserProducts([...DEFAULT_PRODUCTS]);
+                initProductSelect();
+                closeEditModal();
+                showToast('Reset to default products');
+            }
+        }
+
+        // Product selection
         function initProductSelect() {
             const select = document.getElementById('productSelect');
+            select.innerHTML = '<option value="">-- Select Product --</option>';
+            
             products.forEach((product, index) => {
                 const option = document.createElement('option');
                 option.value = index;
@@ -430,13 +876,11 @@
                 select.appendChild(option);
             });
 
-            // Handle product selection
             select.addEventListener('change', function() {
                 if (this.value !== '') {
                     const productIndex = parseInt(this.value);
                     const product = products[productIndex];
                     addProduct(product);
-                    // Reset selection
                     this.value = '';
                 }
             });
@@ -450,6 +894,24 @@
             });
             updateDisplay();
             showToast('Added: ' + product.productname);
+        }
+
+        function searchBarcode() {
+            const barcode = document.getElementById('barcodeInput').value.trim();
+            
+            if (!barcode) {
+                showToast('Please enter a barcode');
+                return;
+            }
+
+            const product = products.find(p => p.barcode === barcode);
+            if (product) {
+                addProduct(product);
+                document.getElementById('barcodeInput').value = '';
+                document.getElementById('barcodeInput').focus();
+            } else {
+                showToast('Product not found for barcode: ' + barcode);
+            }
         }
 
         function addNumber() {
@@ -482,12 +944,10 @@
             const itemCount = document.getElementById('itemCount');
             const totalSum = document.getElementById('totalSum');
 
-            // Update summary
             itemCount.textContent = items.length;
             const sum = items.reduce((a, b) => a + b.price, 0);
             totalSum.textContent = formatNumber(sum);
 
-            // Update items list
             if (items.length === 0) {
                 itemsList.innerHTML = '<li class="empty-state">No items yet. Add some numbers or select products!</li>';
                 return;
@@ -499,14 +959,12 @@
                 li.className = 'item';
                 
                 if (item.type === 'product') {
-                    // Product: show name and price
                     li.innerHTML = `
                         <span class="item-number">${index + 1}.</span>
                         <span class="item-product-name">${item.name}</span>
                         <span class="item-value">${formatNumber(item.price)}</span>
                     `;
                 } else {
-                    // Free number: show just the number
                     li.innerHTML = `
                         <span class="item-number">${index + 1}.</span>
                         <span class="item-value">${formatNumber(item.price)}</span>
@@ -515,7 +973,6 @@
                 itemsList.appendChild(li);
             });
 
-            // Scroll to bottom
             const itemsSection = document.querySelector('.items-section');
             itemsSection.scrollTop = itemsSection.scrollHeight;
         }
@@ -533,19 +990,47 @@
             }
         }
 
-        // Allow Enter key to add
+        function formatNumber(num) {
+            return new Intl.NumberFormat('en-US', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            }).format(num);
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.style.display = 'block';
+            setTimeout(() => {
+                toast.style.display = 'none';
+            }, 2000);
+        }
+
+        // Enter key handlers
         document.getElementById('numberInput').addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
                 addNumber();
             }
         });
 
-        // Initialize product select on load
-        initProductSelect();
+        document.getElementById('barcodeInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                searchBarcode();
+            }
+        });
 
-        // Focus input on load
-        document.getElementById('numberInput').focus();
+        document.getElementById('loginPassword').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                handleLogin();
+            }
+        });
+
+        // Close modal when clicking outside
+        document.getElementById('editModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeEditModal();
+            }
+        });
     </script>
 </body>
 </html>
-
