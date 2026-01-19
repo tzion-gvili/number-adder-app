@@ -864,30 +864,6 @@
             });
         }
 
-        // Generate hash in old format (with firstChar and lastChar) for backward compatibility
-        function hashPasswordOldFormat(password) {
-            if (!password || password === '') {
-                return Promise.reject(new Error('Password is empty'));
-            }
-            return new Promise((resolve) => {
-                try {
-                    let hash = 0;
-                    for (let i = 0; i < password.length; i++) {
-                        const char = password.charCodeAt(i);
-                        hash = ((hash << 5) - hash) + char;
-                        hash = hash & hash;
-                    }
-                    const hashStr = Math.abs(hash).toString(16).padStart(8, '0');
-                    const lenStr = password.length.toString().padStart(2, '0');
-                    const firstChar = password.charCodeAt(0).toString(16).padStart(4, '0');
-                    const lastChar = password.charCodeAt(password.length - 1).toString(16).padStart(4, '0');
-                    resolve('h' + hashStr + lenStr + firstChar + lastChar);
-                } catch (e) {
-                    console.error('Hash error:', e);
-                    resolve('h' + Math.abs(password.split('').reduce((a, b) => a + b.charCodeAt(0), 0)).toString(16));
-                }
-            });
-        }
 
 
         // User management
@@ -949,64 +925,24 @@
                 loginBtn.textContent = 'Logging in...';
             }
 
-            // SIMPLE FIX: Try current format and old format, auto-update if old format matches
-            Promise.all([
-                hashPassword(password),
-                hashPasswordOldFormat(password)
-            ]).then(([hashedPassword, hashedPasswordOld]) => {
+            // SIMPLEST: Just check one hash format
+            hashPassword(password).then(hashedPassword => {
                 try {
                     const users = getUsers();
-                    const storedHash = users[username];
                     
-                    // DEBUG: Log everything
-                    console.log('=== LOGIN DEBUG ===');
-                    console.log('Username:', username);
-                    console.log('Password entered:', password.length, 'characters');
-                    console.log('Current hash:', hashedPassword);
-                    console.log('Old hash:', hashedPasswordOld);
-                    console.log('Stored hash:', storedHash);
-                    console.log('Stored hash length:', storedHash ? storedHash.length : 'null');
-                    console.log('User exists?', users[username] !== undefined);
-                    console.log('All users:', Object.keys(users));
-                    console.log('Match current?', storedHash === hashedPassword);
-                    console.log('Match old?', storedHash === hashedPasswordOld);
-                    console.log('==================');
-                    
-                    // Check current format first (most common)
+                    // Simple check: does password match?
                     if (users[username] && users[username] === hashedPassword) {
-                        // Current format matches - login
-                        console.log('✅ Login successful with current format');
+                        // Login successful
                         currentUser = username;
                         localStorage.setItem('currentUser', username);
                         showApp();
                         showToast('Welcome, ' + username + '!');
-                    } 
-                    // Check old format - if matches, update to current format and login
-                    else if (users[username] && users[username] === hashedPasswordOld) {
-                        // Old format matches - update to current format and login
-                        console.log('✅ Login successful with old format, updating...');
-                        users[username] = hashedPassword;
-                        saveUsers(users);
-                        currentUser = username;
-                        localStorage.setItem('currentUser', username);
-                        showApp();
-                        showToast('Welcome, ' + username + '! (Password updated)');
-                    }
-                    // User doesn't exist
-                    else if (!users[username]) {
-                        console.log('❌ User not found');
-                        if (Object.keys(users).length === 0) {
-                            showToast('ℹ️ No accounts on this device. Click "Create New Account" to get started.');
-                        } else {
-                            showToast('ℹ️ Account "' + username + '" not found. Available: ' + Object.keys(users).join(', '));
-                        }
-                    }
-                    // User exists but password wrong
-                    else {
-                        console.log('❌ Password mismatch');
-                        console.log('Expected one of:', [hashedPassword, hashedPasswordOld]);
-                        console.log('Got:', storedHash);
-                        showToast('❌ Invalid password. Stored: ' + (storedHash ? storedHash.substring(0, 10) + '...' : 'null') + ', Try creating a new account.');
+                    } else if (!users[username]) {
+                        // User doesn't exist
+                        showToast('Account not found. Click "Create New Account" to create one.');
+                    } else {
+                        // Password wrong - suggest creating new account to reset
+                        showToast('Wrong password. Click "Create New Account" to reset your password.');
                     }
                 } catch (e) {
                     console.error('Error in login process:', e);
